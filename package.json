@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "esbuild --bundle src/index.js --outfile=build/main.js",
+    "start": "esbuild --bundle src/index.js --outfile=build/main.js --servedir=build  --loader:.ttf=dataurl"
+  },
+  "dependencies": {
+    "esbuild": "^0.15.12",
+    "exceljs": "^4.3.0"
+  }
+}

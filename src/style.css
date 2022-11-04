@@ -1,0 +1,54 @@
+html {
+	overflow: auto;
+}
+
+td, th {
+	border: 1px solid;
+	position: relative;
+}
+
+td textarea {
+	display: block;
+	width: 100%;
+}
+/* COLOR PICKER */
+color-picker {
+	display: inline-block;
+	padding: 20px;
+	box-shadow: 4px 4px 18px 0px rgba(34, 60, 80, 0.5);
+	background-color: #ffffff;
+	position: absolute;
+	z-index: 1;
+}
+
+.color-picker__apply {
+	margin-top: 10px;
+}
+
+.color-picker__colors {
+	display: flex;
+	gap: 20px;
+}
+
+.color-picker__color {
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+	box-sizing: border-box;
+}
+
+.color-picker_active {
+	border: 1px solid black;
+}
+
+.color-picker__color_green {
+	background-color: rgb(146, 208, 80);
+}
+
+.color-picker__color_yellow {
+	background-color: #FFFF00;
+}
+
+.color-picker__color_red {
+	background-color: #FF0000;
+}
