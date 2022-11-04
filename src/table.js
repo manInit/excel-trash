@@ -4,9 +4,20 @@ const tableBody = table.querySelector("tbody");
 
 const rgb2hex = (rgb) => `${rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1).map(n => parseInt(n, 10).toString(16).toUpperCase().padStart(2, '0')).join('')}`
 
-
 const CLASS_INPUT_CELL_EDIT = "input-cell-edit";
 const SELECTOR_INPUT_CELL_EDIT = `.${CLASS_INPUT_CELL_EDIT}`;
+
+document.addEventListener('click', (e) => {
+  if (e.target.nodeName !== 'TEXTAREA' && e.target.nodeName !== 'TD') {
+    for (const input of document.querySelectorAll(SELECTOR_INPUT_CELL_EDIT)) {
+      const text = input.value;
+      const parent = input.parentElement;
+      input.remove();
+      parent.innerText = text;
+      delete parent.dataset.isEdit;
+    }
+  }
+})
 
 table.addEventListener("click", (e) => {
   if (e.target.nodeName === "TD" && !e.target.dataset.isEdit) {
@@ -43,13 +54,19 @@ table.addEventListener("click", (e) => {
 
     const colorPicker = document.createElement('color-picker');
     colorPicker.style.position = 'absolute'
-    colorPicker.setAttribute('value', rgb2hex((cellElement.style.backgroundColor)))
+    if (cellElement.style.backgroundColor) {
+      colorPicker.setAttribute('value', rgb2hex((cellElement.style.backgroundColor)))
+    }
     cellElement.append(colorPicker)
     colorPicker.style.top = -colorPicker.clientHeight + 30 + 'px';
     colorPicker.style.right =  -colorPicker.clientWidth - 10 + 'px';
+    colorPicker.addEventListener('click', e => {
+      e.stopPropagation()
+    })
     colorPicker.addEventListener('change', (e) => {
       const choiceColor = e.detail
       cellElement.style.backgroundColor = '#' + choiceColor
+      colorPicker.remove()
     })
   }
 });
