@@ -2,11 +2,13 @@ import "./style.css";
 import "./components/";
 import { getExcelData } from "./getExcelData";
 import { updateTable } from "./table";
-import LocalStorage from "../localstorage";
+import LocalStorage from "./localstorage";
+import { saveExcel } from './saveExcel'
 
 const btnExcelBtn = document.getElementById("excel-load");
 const inputTypeFile = document.getElementById("excel-file-input");
 const worksheetSelect = document.getElementById("worksheet-select");
+const saveExcelBtn = document.getElementById("download-excel-btn")
 
 let worksheetsGlobal = null;
 
@@ -58,3 +60,7 @@ window.addEventListener("load", () => {
     loadDocument(worksheets);
   }
 });
+
+saveExcelBtn.addEventListener('click', () => {
+  saveExcel();
+})

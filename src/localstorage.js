@@ -13,13 +13,11 @@ class LocalStorage {
 
   static patchValue(worksheetName, idRow, header, newValue) {
     const workbook = LocalStorage.getWorkbook();
-    console.log(worksheetName)
-    console.log()
     const cellObject = workbook[worksheetName].data.find(
       (row) => row.id === idRow
     );
     if (cellObject[header]) {
-      cellObject.value = newValue;
+      cellObject[header].value = newValue;
     } else {
       cellObject[header] = {
         value: newValue
@@ -34,12 +32,10 @@ class LocalStorage {
       (row) => row.id === idRow
     );
     if (cellObject[header]) {
-      console.log(color)
       cellObject[header].style = {
         bg: color
       };
     } else {
-      console.log(color)
       cellObject[header] = {
         style: {
           bg: color

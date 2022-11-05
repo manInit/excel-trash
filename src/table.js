@@ -1,4 +1,4 @@
-import LocalStorage from "../localstorage";
+import LocalStorage from "./localstorage";
 import { rgb2hex } from "./utils";
 
 const table = document.getElementById("table");
@@ -114,7 +114,6 @@ function updateTableHead(headers) {
 }
 
 function updateTableBody(data, headers) {
-  console.log(data, headers);
   tableBody.innerHTML = "";
   data.map((row, index) => {
     const tr = document.createElement("tr");

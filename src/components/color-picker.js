@@ -27,7 +27,6 @@ class ColorPicker extends HTMLElement {
     const btnReset = this.querySelector(".color-picker__reset");
 
     const initColor = this.getAttribute("value");
-    console.log(initColor);
     switch (initColor) {
       case "92D050":
         this.color = "92D050";
