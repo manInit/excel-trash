@@ -16,6 +16,7 @@ class ColorPicker extends HTMLElement {
           <div class="color-picker__color color-picker__color_red"></div>
         </div>
         <button class="color-picker__apply">Установить</button>
+        <button class="color-picker__reset">Сбросить</button>
       </div>
     `;
     const green = this.querySelector(".color-picker__color_green");
@@ -23,15 +24,16 @@ class ColorPicker extends HTMLElement {
     const red = this.querySelector(".color-picker__color_red");
     const colorsElem = [green, yellow, red];
     const btnApply = this.querySelector(".color-picker__apply");
+    const btnReset = this.querySelector(".color-picker__reset");
 
-    const initColor = this.getAttribute('value');
-    console.log(initColor)
+    const initColor = this.getAttribute("value");
+    console.log(initColor);
     switch (initColor) {
       case "92D050":
         this.color = "92D050";
         this.resetColorChoice(colorsElem);
         green.classList.add("color-picker_active");
-        break; 
+        break;
       case "FFFF00":
         this.color = "FFFF00";
         this.resetColorChoice(colorsElem);
@@ -58,6 +60,14 @@ class ColorPicker extends HTMLElement {
       this.color = "FF0000";
       this.resetColorChoice(colorsElem);
       red.classList.add("color-picker_active");
+    });
+    btnReset.addEventListener("click", (e) => {
+      this.color = "FFFFFF";
+      this.dispatchEvent(
+        new CustomEvent("change", {
+          detail: this.color,
+        })
+      );
     });
     btnApply.addEventListener("click", (e) => {
       this.dispatchEvent(
