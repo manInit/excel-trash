@@ -74,6 +74,14 @@ class LocalStorage {
   static getCurrentWorksheet() {
     return localStorage.getItem("current_worksheet");
   }
+
+  static saveExtraFilterData(workbook) {
+    return localStorage.setItem("extra_filter_workbook", JSON.stringify(workbook));
+  }
+
+  static getExtraFilterData() {
+    return JSON.parse(localStorage.getItem("extra_filter_workbook"));
+  }
 }
 
 export default LocalStorage;

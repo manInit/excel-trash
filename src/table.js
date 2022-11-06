@@ -1,5 +1,5 @@
 import LocalStorage from "./localstorage";
-import TableComponent from './tableComponent';
+import TableComponent from "./tableComponent";
 
 const CLASS_INPUT_CELL_EDIT = "input-cell-edit";
 const SELECTOR_INPUT_CELL_EDIT = `.${CLASS_INPUT_CELL_EDIT}`;
@@ -25,5 +25,8 @@ document.addEventListener("click", (e) => {
   }
 });
 
-export const tableMain = new TableComponent("#table");
-export const tableExtra = new TableComponent("#table-extra");
+const tableMain = new TableComponent("#table");
+const tableExtra = new TableComponent("#table-extra", false);
+tableMain.extraTable = tableExtra;
+
+export { tableMain, tableExtra };

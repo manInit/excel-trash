@@ -20,6 +20,16 @@ const tableExtraEl = document.getElementById("table-extra");
 let isExtra = false;
 let worksheetsGlobal = null;
 
+tableMain.cbExtra = () => {
+  const extraWorksheet = LocalStorage.getExtraFilterData();
+  console.log(extraWorksheet)
+  const name = Object.keys(extraWorksheet)[0]
+  const sheet = extraWorksheet[name]
+  tableExtra.updateTable(sheet.headers, sheet.data);
+  updateSelectionOptions(extraWorksheet);
+  showExtraTable(false);
+}
+
 function showMainTable() {
   table.style.display = "block";
   tableExtraEl.style.display = "none";
@@ -27,11 +37,12 @@ function showMainTable() {
   updateSelectionOptions(worksheetsGlobal);
 }
 
-function showExtraTable() {
+function showExtraTable(update = true) {
   table.style.display = "none";
   tableExtraEl.style.display = "block";
   isExtra = true;
-  updateSelectionOptions(LocalStorage.getExtraWorkbook());
+  if (update)
+    updateSelectionOptions(LocalStorage.getExtraWorkbook());
 }
 
 function loadDocument(worksheets) {
@@ -70,7 +81,7 @@ worksheetSelect.addEventListener("change", (e) => {
       LocalStorage.saveCurrentWorksheet(e.target.value);
       tableMain.updateTable(worksheet.headers, worksheet.data);
     } else {
-      const worksheets = LocalStorage.getExtraWorkbook();
+      const worksheets = LocalStorage.getExtraFilterData();
       const worksheet = worksheets[e.target.value];
       tableExtra.updateTable(worksheet.headers, worksheet.data);
     }
@@ -79,13 +90,14 @@ worksheetSelect.addEventListener("change", (e) => {
 
 function updateSelectionOptions(worksheets) {
   worksheetSelect.innerHTML = "";
+  console.log('fgfg')
   for (let name of Object.keys(worksheets)) {
     const option = document.createElement("option");
     option.value = name;
     option.innerText = name;
     worksheetSelect.append(option);
   }
-  worksheetSelect.value = LocalStorage.getCurrentWorksheet()
+  // worksheetSelect.value = LocalStorage.getCurrentWorksheet()
 }
 
 window.addEventListener("load", () => {

@@ -35,7 +35,11 @@ export async function getExcelData(file) {
     
     worksheet.eachRow((row, rowNumber) => {
       if (rowNumber === 1) {
-        worksheetsData[worksheet.name].headers = row.values.splice(1);
+        const values = row.values.splice(1)
+        worksheetsData[worksheet.name].headers = values.map((val) => {
+          if (val.result) return val.result.toString()
+          return val
+        })
         for (let i = 0; i < worksheetsData[worksheet.name].headers.length; i++) {
           if (!worksheetsData[worksheet.name].headers[i]) worksheetsData[worksheet.name].headers[i] = "_" + i;
         }

@@ -1,3 +1,4 @@
+import { filterExtraExcel } from "./filterExtraExcel";
 import LocalStorage from "./localstorage";
 import { rgb2hex } from "./utils";
 
@@ -5,16 +6,45 @@ const CLASS_INPUT_CELL_EDIT = "input-cell-edit";
 const SELECTOR_INPUT_CELL_EDIT = `.${CLASS_INPUT_CELL_EDIT}`;
 
 class TableComponent {
-  constructor(tableSelector) {
+  extraTable = null;
+  cbExtra = null
+
+  constructor(tableSelector, isEditable = true) {
     this.table = document.querySelector(tableSelector);
     this.tableHead = this.table.querySelector("thead");
     this.tableBody = this.table.querySelector("tbody");
     this.isEditCheckbox = document.getElementById("edit-toggle");
+    this.isEditable = isEditable;
 
     this.table.addEventListener("click", (e) => {
-      if (!this.isEditCheckbox.checked) return;
+      // search
+      if (e.target.nodeName === "TD" && !this.isEditCheckbox.checked) {
+        const cellElement = e.target;
+        const keyValue = cellElement.dataset.columnName;
+        if (keyValue.startsWith("Happy")) {
+          const rowId = parseInt(cellElement.dataset.idRow);
+          const sheetName = LocalStorage.getCurrentWorksheet();
+          const workbook = LocalStorage.getWorkbook();
+          const name = workbook[sheetName].data.find((row) => row.id === rowId)[
+            "НИК"
+          ]?.value;
+          if (!name || !this.extraTable) return;
+          const filteredExtraData = filterExtraExcel(name);
+          if (Object.keys(filteredExtraData).length === 0) return;
+          LocalStorage.saveExtraFilterData(filteredExtraData)
+          if (this.cbExtra) this.cbExtra()
+          // const sheetNameFirst = Object.keys(filteredExtraData)[0]
+          // const sheet = filteredExtraData[sheetNameFirst]
+          // this.extraTable.updateTable(sheet.headers, sheet.data);
+        }
+        return;
+      }
+      if (!this.isEditCheckbox.checked || !this.isEditable) return;
+      // edit mode
       if (e.target.nodeName === "TD" && !e.target.dataset.isEdit) {
-        for (const input of document.querySelectorAll(SELECTOR_INPUT_CELL_EDIT)) {
+        for (const input of document.querySelectorAll(
+          SELECTOR_INPUT_CELL_EDIT
+        )) {
           const text = input.value;
           const parent = input.parentElement;
           input.remove();
@@ -25,7 +55,7 @@ class TableComponent {
         const rowId = cellElement.dataset.idRow;
         const keyValue = cellElement.dataset.columnName;
         LocalStorage.setCurrentCell(rowId, keyValue);
-    
+
         const input = document.createElement("textarea");
         input.classList.add(CLASS_INPUT_CELL_EDIT);
         input.value = cellElement.innerText;
@@ -54,7 +84,7 @@ class TableComponent {
         cellElement.append(input);
         input.focus();
         cellElement.dataset.isEdit = true;
-    
+
         const colorPicker = document.createElement("color-picker");
         colorPicker.style.position = "absolute";
         if (cellElement.style.backgroundColor) {
@@ -78,7 +108,7 @@ class TableComponent {
             parseInt(idRow),
             columnName,
             choiceColor
-          )
+          );
           colorPicker.remove();
         });
       }
@@ -86,7 +116,6 @@ class TableComponent {
   }
 
   updateTable(headers, data) {
-    console.log(this.table)
     this._updateTableHead(headers);
     this._updateTableBody(data, headers);
   }
@@ -105,7 +134,6 @@ class TableComponent {
       });
       this.tableBody.append(tr);
     });
-    console.log(this.tableBody)
   }
 
   _updateTableHead(headers) {
