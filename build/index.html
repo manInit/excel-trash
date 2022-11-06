@@ -9,10 +9,16 @@
 </head>
 <body>
   <div class="toolbar">
-    <form>
+    <div>
+      <label for="excel-file-input">Загрузить основной файл</label>
       <input type="file" id="excel-file-input">
       <button id="excel-load">Загрузить</button>
-    </form>
+    </div>
+    <div>
+      <label for="excel-extra-file-input">Загрузить дополнительный файл</label>
+      <input type="file" id="excel-extra-file-input">
+      <button id="excel-extra-load">Загрузить</button>
+    </div>
     <div>
       <input id="edit-toggle" type="checkbox">
       <label for="edit-toggle">Режим редактирования</label>
@@ -27,8 +33,20 @@
     <select id="worksheet-select">
 
     </select>
+    <div class="tabs">
+      <button id="main-tab">Основная</button>
+      <button id="extra-tab">Дополнительная</button>
+    </div>
   </div>
   <table id="table">
+    <thead>
+
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+  <table id="table-extra" style="display: none">
     <thead>
 
     </thead>

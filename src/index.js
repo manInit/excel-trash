@@ -1,16 +1,38 @@
 import "./style.css";
 import "./components/";
 import { getExcelData } from "./getExcelData";
-import { updateTable } from "./table";
+import { tableMain, tableExtra } from "./table";
 import LocalStorage from "./localstorage";
-import { saveExcel } from './saveExcel'
+import { saveExcel } from "./saveExcel";
 
 const btnExcelBtn = document.getElementById("excel-load");
 const inputTypeFile = document.getElementById("excel-file-input");
+const inputExtraFile = document.getElementById("excel-extra-file-input");
 const worksheetSelect = document.getElementById("worksheet-select");
-const saveExcelBtn = document.getElementById("download-excel-btn")
+const saveExcelBtn = document.getElementById("download-excel-btn");
+const saveExtraBtn = document.getElementById("excel-extra-load");
 
+const mainTabBtn = document.getElementById("main-tab");
+const extraTabBtn = document.getElementById("extra-tab");
+const table = document.getElementById("table");
+const tableExtraEl = document.getElementById("table-extra");
+
+let isExtra = false;
 let worksheetsGlobal = null;
+
+function showMainTable() {
+  table.style.display = "block";
+  tableExtraEl.style.display = "none";
+  isExtra = false;
+  updateSelectionOptions(worksheetsGlobal);
+}
+
+function showExtraTable() {
+  table.style.display = "none";
+  tableExtraEl.style.display = "block";
+  isExtra = true;
+  updateSelectionOptions(LocalStorage.getExtraWorkbook());
+}
 
 function loadDocument(worksheets) {
   worksheetsGlobal = worksheets;
@@ -19,11 +41,16 @@ function loadDocument(worksheets) {
     const worksheetName = LocalStorage.getCurrentWorksheet();
     const firstWorksheet = worksheetsGlobal[worksheetName];
     worksheetSelect.value = worksheetName;
-    updateTable(firstWorksheet.headers, firstWorksheet.data);
+    tableMain.updateTable(firstWorksheet.headers, firstWorksheet.data);
   } else {
     const firstWorksheet = worksheetsGlobal[Object.keys(worksheets)[0]];
     LocalStorage.saveCurrentWorksheet(Object.keys(worksheets)[0]);
-    updateTable(firstWorksheet.headers, firstWorksheet.data);
+    tableMain.updateTable(firstWorksheet.headers, firstWorksheet.data);
+  }
+  const extraWorkbook = LocalStorage.getExtraWorkbook()
+  if (extraWorkbook) {
+    const firstWorksheet = extraWorkbook[Object.keys(extraWorkbook)[0]];
+    tableExtra.updateTable(firstWorksheet.headers, firstWorksheet.data);
   }
 }
 
@@ -38,9 +65,15 @@ btnExcelBtn.addEventListener("click", async (e) => {
 
 worksheetSelect.addEventListener("change", (e) => {
   if (worksheetsGlobal) {
-    const worksheet = worksheetsGlobal[e.target.value];
-    LocalStorage.saveCurrentWorksheet(e.target.value);
-    updateTable(worksheet.headers, worksheet.data);
+    if (!isExtra) {
+      const worksheet = worksheetsGlobal[e.target.value];
+      LocalStorage.saveCurrentWorksheet(e.target.value);
+      tableMain.updateTable(worksheet.headers, worksheet.data);
+    } else {
+      const worksheets = LocalStorage.getExtraWorkbook();
+      const worksheet = worksheets[e.target.value];
+      tableExtra.updateTable(worksheet.headers, worksheet.data);
+    }
   }
 });
 
@@ -52,6 +85,7 @@ function updateSelectionOptions(worksheets) {
     option.innerText = name;
     worksheetSelect.append(option);
   }
+  worksheetSelect.value = LocalStorage.getCurrentWorksheet()
 }
 
 window.addEventListener("load", () => {
@@ -61,6 +95,23 @@ window.addEventListener("load", () => {
   }
 });
 
-saveExcelBtn.addEventListener('click', () => {
+saveExcelBtn.addEventListener("click", () => {
   saveExcel();
-})
+});
+
+saveExtraBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const worksheets = await getExcelData(inputExtraFile.files[0]);
+  LocalStorage.saveExtraWorkbook(worksheets);
+  updateSelectionOptions(worksheets);
+  const firstWorksheet = worksheets[Object.keys(worksheets)[0]];
+  tableExtra.updateTable(firstWorksheet.headers, firstWorksheet.data);
+});
+
+mainTabBtn.addEventListener("click", (e) => {
+  showMainTable();
+});
+
+extraTabBtn.addEventListener("click", (e) => {
+  showExtraTable();
+});

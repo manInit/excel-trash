@@ -29,6 +29,12 @@ td textarea {
 	height: 50px;
 }
 
+.worksheet {
+	display: flex;
+	gap: 20px;
+	padding: 10px 0;
+}
+
 /* COLOR PICKER */
 color-picker {
 	display: inline-block;

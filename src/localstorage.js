@@ -7,6 +7,14 @@ class LocalStorage {
     localStorage.setItem("workbook", JSON.stringify(workbook));
   }
 
+  static saveExtraWorkbook(workbook) {
+    localStorage.setItem("extra_workbook", JSON.stringify(workbook));
+  }
+
+  static getExtraWorkbook() {
+    return JSON.parse(localStorage.getItem("extra_workbook"));
+  }
+
   static saveCurrentWorksheet(worksheet) {
     localStorage.setItem("current_worksheet", worksheet);
   }

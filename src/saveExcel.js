@@ -3,7 +3,6 @@ import Excel from "exceljs/dist/exceljs";
 
 function saveExcel() {
   const workbookRawData = LocalStorage.getWorkbook();
-  console.log(workbookRawData);
   const workbook = new Excel.Workbook();
   for (const worksheetName of Object.keys(workbookRawData)) {
     const sheet = workbook.addWorksheet(worksheetName);
