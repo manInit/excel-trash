@@ -7,3 +7,5 @@ npm install
 ```bash
 npm start
 ```
+
+Добавлять стили можно в файл /src/style.css
